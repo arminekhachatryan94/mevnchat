@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/arminekhachatryan94/mevnchat#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "vue": "^2.5.16",
+    "vue-router": "^3.0.1"
   }
 }
