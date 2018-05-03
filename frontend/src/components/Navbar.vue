@@ -1,7 +1,7 @@
 <template>
     <nav class="text-white row col-md-12">
         <span class="col-md-6 text-left">
-            <a id="title" href="/#/">iChat</a>
+            <router-link :to="{ name: 'Home' }" id="title">iChat</router-link>
         </span>
         <div class="col-md-6 text-right">
             <router-link :to="{ name: 'Register' }" class="align-middle">Register</router-link>
