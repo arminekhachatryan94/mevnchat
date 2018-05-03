@@ -5,18 +5,14 @@
         </span>
         <div class="col-md-6 text-right">
             <a class="align-middle" href="/#/register">Register</a>
-            <a class="align-middle" href="/#/login">Login</a>
+            <router-link :to="{ name: 'Login' }" class="align-middle">Login</router-link>
         </div>
     </nav>
 </template>
 
 <script>
 export default {
-  name: 'Navbar',
-  data () {
-    return {
-    }
-  }
+  name: 'Navbar'
 }
 </script>
 
