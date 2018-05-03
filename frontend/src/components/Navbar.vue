@@ -1,5 +1,5 @@
 <template>
-    <nav class="text-white row col-md-12">
+    <nav class="text-white row col-md-12 padding-top-10">
         <span class="col-md-6 text-left">
             <router-link :to="{ name: 'Home' }" id="title">iChat</router-link>
         </span>
@@ -32,5 +32,8 @@ a {
 }
 #height {
     height: 100px;
+}
+.padding-top-10 {
+    padding-top: 10px;
 }
 </style>
