@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div id="title" class="display-4 padding-top-50">Login</div>
+  <div id="title" class="display-4 padding-top-50">Register</div>
   <div class="padding-top-30">
     <form>
       <div class="form-group">
@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="form-group">
-        <button type="button" class="btn">Login</button>
+        <button type="button" class="btn">Create Account</button>
       </div>
     </form>
   </div>
@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  name: 'Login',
+  name: 'Register',
   data () {
     return {
       credentials: {
@@ -57,6 +57,6 @@ export default {
     font-weight: bold;
 }
 .form-group {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 </style>

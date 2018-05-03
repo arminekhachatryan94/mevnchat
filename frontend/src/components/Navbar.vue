@@ -4,7 +4,7 @@
             <a id="title" href="/#/">iChat</a>
         </span>
         <div class="col-md-6 text-right">
-            <a class="align-middle" href="/#/register">Register</a>
+            <router-link :to="{ name: 'Register' }" class="align-middle">Register</router-link>
             <router-link :to="{ name: 'Login' }" class="align-middle">Login</router-link>
         </div>
     </nav>
@@ -21,7 +21,7 @@ nav{
     background-color: rgb(145, 204, 105);
     width: 100%;
 }
-a{
+a {
     color: white;
     font-size: 20px;
     padding: 5px;
