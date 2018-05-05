@@ -2,6 +2,7 @@
     <nav class="text-white row col-md-12 padding-top-10">
         <span class="col-md-6 text-left">
             <router-link :to="{ name: 'Home' }" id="title">iChat</router-link>
+            <router-link :to="{ name: 'Messages' }">Messages</router-link>
         </span>
         <div class="col-md-6 text-right">
             <router-link :to="{ name: 'Register' }" class="align-middle">Register</router-link>

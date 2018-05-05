@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/views/home'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import Messages from '@/views/Messages'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/messages',
+      name: 'Messages',
+      component: Messages
     }
   ]
 })
