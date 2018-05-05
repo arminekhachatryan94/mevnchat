@@ -21,6 +21,7 @@
     "express": "^4.16.3",
     "fs": "0.0.1-security",
     "http": "0.0.0",
+    "mongodb": "^3.0.7",
     "socket.io": "^1.7.3"
   }
 }
