@@ -8,12 +8,18 @@
             <router-link :to="{ name: 'Register' }" class="align-middle">Register</router-link>
             <router-link :to="{ name: 'Login' }" class="align-middle">Login</router-link>
         </div>
+        <button v-on:click="onClickButton">Add 1</button>
     </nav>
 </template>
 
 <script>
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+  methods: {
+    onClickButton (event) {
+      this.$emit('clicked', 1)
+    }
+  }
 }
 </script>
 

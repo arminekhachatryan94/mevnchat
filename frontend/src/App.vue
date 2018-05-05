@@ -1,9 +1,10 @@
 <template>
   <div id="app">
-    <navbar></navbar>
+    <navbar @clicked="onClickChild"></navbar>
     <div class="margin">
       <router-view/>
     </div>
+    <div v-text="a"></div>
   </div>
 </template>
 
@@ -12,7 +13,17 @@ import Navbar from './components/Navbar'
 
 export default {
   name: 'App',
-  components: { Navbar }
+  components: { Navbar },
+  data () {
+    return {
+      a: 1
+    }
+  },
+  methods: {
+    onClickChild (value) {
+      this.a += value
+    }
+  }
 }
 </script>
 
