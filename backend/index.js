@@ -115,12 +115,41 @@ const findMessages = function(db, callback) {
 
 /* PAGES & HTTP REQUESTS */
 
-/*
 // login
-app.get('/login', function(req, res) {
-    ;
+app.post('/login', function(req, res) {
+    var username=req.body.username;
+    var password=req.body.password;
+    console.log(username + " " + password);
+    
+    var users;
+    const findUser = function(db, callback) {
+        const collection = db.collection('documents');
+        collection.find(
+            { username : username }
+        ).toArray(function(err, docs) {
+            assert.equal(err, null);
+            console.log("Found the following records: " + docs.length);
+            users = docs;
+            callback(docs);
+        });
+    }
+    mongo.connect(url, function(err, client) {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+      
+        const db = client.db(usersDB);
+        findUser(db, function() {
+            if( users.length == 1 && users[0].username == username && users[0].password == password ){
+                // successfully logged in
+                res.status(200).send('Successfully logged in');
+                client.close();
+            } else {
+                res.status(401).send('Invalid credentials');
+                client.close();
+            }
+        });
+    });
 });
-*/
 
 // register
 app.post('/register', (req, res) => {
