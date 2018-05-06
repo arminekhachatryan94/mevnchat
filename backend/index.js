@@ -10,6 +10,8 @@ app.listen(3000, () => {
 var express = require('express');
 var bodyParser = require("body-parser");
 var app = express();
+var cors = require('cors');
+app.use(cors());
 
 app.use(express.static(__dirname + '/node_modules'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -30,6 +32,38 @@ const usersDB = 'users';
 const messagesDB = 'messages'; // db name
 
 server.listen(3000);
+
+const findUsers = function(db, callback) {
+    const collection = db.collection('documents');
+    collection.find({}).toArray(function(err, docs) {
+        assert.equal(err, null);
+        console.log("Found the following records: " + docs.length);
+        console.log(docs);
+        callback(docs);
+    });
+}
+
+const removeUsers = function(db, callback) {
+    // Get the documents collection
+    const collection = db.collection('documents');
+    // Delete document where a is 3
+    collection.deleteOne({ username : null }, function(err, result) {
+        assert.equal(err, null);
+        assert.equal(1, result.result.n); // 1 document removed based on n
+        console.log("Removed 1 message with the field username equal to ani");
+        callback(result);
+    });
+}
+
+mongo.connect(url, function(err, client) {
+    assert.equal(null, err);
+    console.log("Connected successfully to server");
+  
+    const db = client.db(usersDB);
+    findUsers(db, function() {
+        client.close();
+    });
+});
 
 /* MESSAGES TABLE FUNCTIONS */
 const insertMessages = function(db, callback) {
@@ -95,7 +129,7 @@ app.post('/register', (req, res) => {
     console.log("username: " + username + ", password: " + password);
 
     var users;
-    const findUsers = function(db, callback) {
+    const findUser = function(db, callback) {
         const collection = db.collection('documents');
         collection.find(
             { username : username }
@@ -112,7 +146,7 @@ app.post('/register', (req, res) => {
         console.log("Connected successfully to server");
       
         const db = client.db(usersDB);
-        findUsers(db, function() {
+        findUser(db, function() {
             if( users.length == 0 ){
                 // create new user
                 const insertUser = function(db, callback) {
@@ -131,17 +165,22 @@ app.post('/register', (req, res) => {
                         callback(result);
                     });
                 }
-                // insertUser
-                insertUser(db, function() {
-                    res.send( 200, JSON.stringify({ message: 'Successfully created user' }, null, 3) );
+                if( username.length != 0 || password.length != 0 ){
+                    // insertUser
+                    insertUser(db, function() {
+                        res.status(200).send( 'Successfully created user.' );
+                        client.close();
+                    });
+                }
+                else {
+                    res.status(401).send( 'Empty input is invalid.' );
                     client.close();
-                });
+                }
             } else {
                 // user exists
-                res.send( 400, JSON.stringify({ error: "Username already exists" }, null, 3) );
+                res.status(401).send( 'Username already exists.' );
                 client.close();
             }
-            client.close();
         });
     });
 });
@@ -159,6 +198,5 @@ app.get('/messages', function(req, res) {
         });
     });
     console.log('connected');
-    res.setHeader("Access-Control-Allow-Origin", "*");
     res.send({ messages: messages } );
 });
