@@ -2,13 +2,13 @@
 <div>
   <div id="title" class="display-4 padding-top-50">Register</div>
   <div class="padding-top-30">
-    <form>
+    <form method="POST" @submit.prevent="onSubmit">
       <div class="form-group">
         <div>
           <label for="username">Username</label>
         </div>
         <div>
-          <input type="text" id="username" v-model="credentials.username">
+          <input type="text" id="username" v-model="credentials.username" required>
         </div>
       </div>
       <div class="form-group">
@@ -16,18 +16,22 @@
           <label for="password">Password</label>
         </div>
         <div>
-          <input type="text" id="password" v-model="credentials.password">
+          <input type="text" id="password" v-model="credentials.password" required>
         </div>
       </div>
       <div class="form-group">
-        <button type="button" class="btn">Create Account</button>
+        <button type="submit" class="btn">Create Account</button>
       </div>
     </form>
+    <div v-if="error.length" v-text="error" class="text-danger"></div>
+    <div v-if="success.length" v-text="success" class="text-success"></div>
   </div>
 </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Register',
   data () {
@@ -35,6 +39,40 @@ export default {
       credentials: {
         username: '',
         password: ''
+      },
+      error: '',
+      success: ''
+    }
+  },
+  methods: {
+    onSubmit () {
+      axios.post('http://localhost:3000/register', {
+        username: this.credentials.username,
+        password: this.credentials.password
+      })
+      .then( (response) => {
+        this.success = response.data;
+        console.log(response.data);
+      })
+      .catch( (error) => {
+        this.error = error.response.data;
+        console.log(error.response.data);
+      });
+      this.credentials.username = '';
+      this.credentials.password = '';
+    },
+    isError () {
+      if( this.error.length == 0 ){
+        return false;
+      } else {
+        return true;
+      }
+    },
+    isSuccess () {
+      if( this.success.length == 0 ){
+        return false;
+      } else {
+        return true;
       }
     }
   }
