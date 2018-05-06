@@ -8,7 +8,7 @@
           <label for="username">Username</label>
         </div>
         <div>
-          <input type="text" id="username" v-model="credentials.username" required>
+          <input type="text" id="username" v-model="credentials.username" @keydown="deleteError" required>
         </div>
       </div>
       <div class="form-group">
@@ -16,7 +16,7 @@
           <label for="password">Password</label>
         </div>
         <div>
-          <input type="text" id="password" v-model="credentials.password" required>
+          <input type="text" id="password" v-model="credentials.password" @keydown="deleteError" required>
         </div>
       </div>
       <div class="form-group">
@@ -24,7 +24,7 @@
       </div>
     </form>
     <div v-if="error.length" v-text="error" class="text-danger"></div>
-    <div v-if="success.length" v-text="success" class="text-success"></div>
+    <div></div>
   </div>
 </div>
 </template>
@@ -40,8 +40,7 @@ export default {
         username: '',
         password: ''
       },
-      error: '',
-      success: ''
+      error: ''
     }
   },
   methods: {
@@ -50,30 +49,31 @@ export default {
         username: this.credentials.username,
         password: this.credentials.password
       })
-      .then( (response) => {
-        this.success = response.data;
-        console.log(response.data);
+      .then((response) => {
+        location.href = '/#/login'
       })
-      .catch( (error) => {
-        this.error = error.response.data;
-        console.log(error.response.data);
-      });
-      this.credentials.username = '';
-      this.credentials.password = '';
+      .catch((error) => {
+        this.error = error.response.data
+      })
+      this.credentials.username = ''
+      this.credentials.password = ''
     },
     isError () {
-      if( this.error.length == 0 ){
-        return false;
+      if (this.error.length == 0) {
+        return false
       } else {
-        return true;
+        return true
       }
     },
     isSuccess () {
-      if( this.success.length == 0 ){
-        return false;
+      if (this.success.length == 0) {
+        return false
       } else {
-        return true;
+        return true
       }
+    },
+    deleteError () {
+      this.error = ''
     }
   }
 }
