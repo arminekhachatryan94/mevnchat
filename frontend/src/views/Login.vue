@@ -1,5 +1,6 @@
 <template>
 <div>
+  <div class="bg-success text-white" v-text="this.$session.flash.get('login')"></div>
   <div id="title" class="display-4 padding-top-50">Login</div>
   <div class="padding-top-30">
     <form>

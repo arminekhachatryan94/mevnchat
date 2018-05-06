@@ -1,10 +1,8 @@
 <template>
   <div id="app">
     <navbar @clicked="onClickChild"></navbar>
-    <div class="margin">
       <router-view/>
-    </div>
-    <div v-text="a"></div>
+      <div v-text="a"></div>
   </div>
 </template>
 
@@ -28,9 +26,6 @@ export default {
 </script>
 
 <style>
-.margin {
-  margin-top: 30px;
-}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

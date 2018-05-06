@@ -24,7 +24,6 @@
       </div>
     </form>
     <div v-if="error.length" v-text="error" class="text-danger"></div>
-    <div></div>
   </div>
 </div>
 </template>
@@ -50,6 +49,7 @@ export default {
         password: this.credentials.password
       })
       .then((response) => {
+        this.$session.flash.set('login', 'Successfully registered! Please login to continue.');
         location.href = '/#/login'
       })
       .catch((error) => {
