@@ -8,41 +8,62 @@ app.listen(3000, () => {
 
 // use express
 var express = require('express');
-var app = express();  
+var bodyParser = require("body-parser");
+var app = express();
+
+app.use(express.static(__dirname + '/node_modules'));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// date format
+// var dateFormat = require('dateformat');
+
 // use socket.io
 var server = require('http').createServer(app);  
 var io = require('socket.io')(server);
 
 // mongodb
-const MongoClient = require('mongodb').MongoClient;
+const mongo = require('mongodb').MongoClient;
 const assert = require('assert');
 const url = 'mongodb://localhost:27017'; // connection url
-const dbName = 'myproject'; // db name
-// connect method to connect to server
-MongoClient.connect(url, function(err, client) {
-  assert.equal(null, err);
-  console.log("Connected successfully to server");
+const usersDB = 'users';
+const messagesDB = 'messages'; // db name
 
-  const db = client.db(dbName);
-    insertDocuments(db, function() {
-        client.close();
+server.listen(3000);
+
+/* MESSAGES TABLE FUNCTIONS */
+const insertMessages = function(db, callback) {
+    // Get the documents collection
+    const collection = db.collection('documents');
+    // Insert some documents
+    collection.insertMany([
+        {
+            username: 'ani',
+            text: 'hello',
+            date: new Date()
+        }
+    ], function(err, result) {
+        assert.equal(err, null);
+        assert.equal(1, result.ops.length);
+        console.log("Inserted 1 message into the collection");
+        callback(result);
     });
-});
+}
 
-const removeDocument = function(db, callback) {
+const removeMessage = function(db, callback) {
     // Get the documents collection
     const collection = db.collection('documents');
     // Delete document where a is 3
     collection.deleteOne({ username : 'ani' }, function(err, result) {
         assert.equal(err, null);
         assert.equal(1, result.result.n); // 1 document removed based on n
-        console.log("Removed 1 documents with the field username equal to ani");
+        console.log("Removed 1 message with the field username equal to ani");
         callback(result);
     });
 }
 
 var messages;
-const findDocuments = function(db, callback) {
+const findMessages = function(db, callback) {
     // Get the documents collection
     const collection = db.collection('documents');
     // Find all documents (no query filter)
@@ -54,38 +75,88 @@ const findDocuments = function(db, callback) {
     });
 }
 
-const insertDocuments = function(db, callback) {
-    // Get the documents collection
-    const collection = db.collection('documents');
-    // Insert some documents
-    collection.insertMany([
-        {
-            username: 'ani',
-            text: 'hello',
-            date: 'now'
-        }
-    ], function(err, result) {
-      assert.equal(err, null);
-      assert.equal(1, result.ops.length);
-      console.log("Inserted 1 document into the collection");
-      callback(result);
-    });
-  }
-  
+/* USERS FUNCTIONS */
 
-app.use(express.static(__dirname + '/node_modules'));  
 
-server.listen(3000);
 
-app.get('/messages', function(req, res, next) {
-    MongoClient.connect(url, function(err, client) {
+/* PAGES & HTTP REQUESTS */
+
+/*
+// login
+app.get('/login', function(req, res) {
+    ;
+});
+*/
+
+// register
+app.post('/register', (req, res) => {
+    var username=req.body.username;
+    var password=req.body.password;
+    console.log("username: " + username + ", password: " + password);
+
+    var users;
+    const findUsers = function(db, callback) {
+        const collection = db.collection('documents');
+        collection.find(
+            { username : username }
+        ).toArray(function(err, docs) {
+            assert.equal(err, null);
+            console.log("Found the following records: " + docs.length);
+            users = docs;
+            callback(docs);
+        });
+    }
+
+    mongo.connect(url, function(err, client) {
         assert.equal(null, err);
         console.log("Connected successfully to server");
       
-        const db = client.db(dbName);
-          findDocuments(db, function() {
-              client.close();
-          });
+        const db = client.db(usersDB);
+        findUsers(db, function() {
+            if( users.length == 0 ){
+                // create new user
+                const insertUser = function(db, callback) {
+                    // Get the documents collection
+                    const collection = db.collection('documents');
+                    // Insert some documents
+                    collection.insertMany([
+                        {
+                            username: username,
+                            password: password
+                        }
+                    ], function(err, result) {
+                        assert.equal(err, null);
+                        assert.equal(1, result.ops.length);
+                        console.log("Inserted 1 message into the collection");
+                        callback(result);
+                    });
+                }
+                // insertUser
+                insertUser(db, function() {
+                    res.send( 200, JSON.stringify({ message: 'Successfully created user' }, null, 3) );
+                    client.close();
+                });
+            } else {
+                // user exists
+                res.send( 400, JSON.stringify({ error: "Username already exists" }, null, 3) );
+                client.close();
+            }
+            client.close();
+        });
+    });
+});
+
+// messages
+app.get('/messages', function(req, res) {
+    // add socket code here?
+    mongo.connect(url, function(err, client) {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+      
+        const db = client.db(messagesDB);
+        findMessages(db, function() {
+            client.close();
+        });
     });
     console.log('connected');
     res.setHeader("Access-Control-Allow-Origin", "*");
