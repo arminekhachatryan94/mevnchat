@@ -55,6 +55,7 @@ const removeUsers = function(db, callback) {
     });
 }
 
+/*
 mongo.connect(url, function(err, client) {
     assert.equal(null, err);
     console.log("Connected successfully to server");
@@ -64,6 +65,7 @@ mongo.connect(url, function(err, client) {
         client.close();
     });
 });
+*/
 
 /* MESSAGES TABLE FUNCTIONS */
 const insertMessages = function(db, callback) {
@@ -141,7 +143,7 @@ app.post('/login', function(req, res) {
         findUser(db, function() {
             if( users.length == 1 && users[0].username == username && users[0].password == password ){
                 // successfully logged in
-                res.status(200).send('Successfully logged in');
+                res.status(200).send(username);
                 client.close();
             } else {
                 res.status(401).send('Invalid credentials');

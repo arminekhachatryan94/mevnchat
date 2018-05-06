@@ -1,15 +1,15 @@
 <template>
 <div>
-  <div class="bg-success text-white" v-text="this.$session.flash.get('login')"></div>
+  <div class="bg-success text-white" v-text="this.$session.flash.get('registered')"></div>
   <div id="title" class="display-4 padding-top-50">Login</div>
   <div class="padding-top-30">
-    <form>
+    <form method="POST" @submit.prevent="onSubmit">
       <div class="form-group">
         <div>
           <label for="username">Username</label>
         </div>
         <div>
-          <input type="text" id="username" v-model="credentials.username">
+          <input type="text" id="username" v-model="credentials.username" @keydown="deleteError" required>
         </div>
       </div>
       <div class="form-group">
@@ -17,18 +17,21 @@
           <label for="password">Password</label>
         </div>
         <div>
-          <input type="text" id="password" v-model="credentials.password">
+          <input type="text" id="password" v-model="credentials.password" @keydown="deleteError" required>
         </div>
       </div>
       <div class="form-group">
-        <button type="button" class="btn">Login</button>
+        <button type="submit" class="btn">Login</button>
       </div>
     </form>
+    <div v-if="error.length" v-text="error" class="text-danger"></div>
   </div>
 </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Login',
   data () {
@@ -36,7 +39,39 @@ export default {
       credentials: {
         username: '',
         password: ''
+      },
+      error: ''
+    }
+  },
+  methods: {
+    onSubmit () {
+      axios.post('http://localhost:3000/login', {
+        username: this.credentials.username,
+        password: this.credentials.password
+      })
+      .then((response) => {
+        this.$session.start()
+        this.$session.flash.set('loggedin', 'Successfully logged in! Enjoy iChat.')
+        this.$session.set('auth', true)
+        this.$session.set('username', response.data)
+        location.href = '/#/messages'
+        console.log(this.$session.get('username'))
+      })
+      .catch((error) => {
+        this.error = error.response.data
+      })
+      this.credentials.username = ''
+      this.credentials.password = ''
+    },
+    isError () {
+      if (this.error.length == 0) {
+        return false
+      } else {
+        return true
       }
+    },
+    deleteError () {
+      this.error = ''
     }
   }
 }

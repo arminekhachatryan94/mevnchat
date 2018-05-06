@@ -49,7 +49,7 @@ export default {
         password: this.credentials.password
       })
       .then((response) => {
-        this.$session.flash.set('login', 'Successfully registered! Please login to continue.');
+        this.$session.flash.set('registered', 'Successfully registered! Please login to continue.');
         location.href = '/#/login'
       })
       .catch((error) => {
@@ -60,13 +60,6 @@ export default {
     },
     isError () {
       if (this.error.length == 0) {
-        return false
-      } else {
-        return true
-      }
-    },
-    isSuccess () {
-      if (this.success.length == 0) {
         return false
       } else {
         return true

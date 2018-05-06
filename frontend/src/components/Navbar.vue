@@ -5,8 +5,10 @@
             <router-link :to="{ name: 'Messages' }">Messages</router-link>
         </span>
         <div class="col-md-6 text-right">
-            <router-link :to="{ name: 'Register' }" class="align-middle">Register</router-link>
-            <router-link :to="{ name: 'Login' }" class="align-middle">Login</router-link>
+            <router-link v-if="!this.$session.get('auth')" :to="{ name: 'Register' }" class="align-middle">Register</router-link>
+            <router-link v-if="!this.$session.get('auth')" :to="{ name: 'Login' }" class="align-middle">Login</router-link>
+            <div v-if="this.$session.get('auth')"></div>
+            <a href="" v-on:click="logout" v-if="this.$session.get('auth')">Log out</a>
         </div>
         <button v-on:click="onClickButton">Add 1</button>
     </nav>
@@ -18,6 +20,9 @@ export default {
   methods: {
     onClickButton (event) {
       this.$emit('clicked', 1)
+    },
+    logout() {
+        this.$session.destroy();
     }
   }
 }
