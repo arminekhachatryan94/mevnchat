@@ -30,6 +30,8 @@ const assert = require('assert');
 const url = 'mongodb://localhost:27017'; // connection url
 const usersDB = 'users';
 const messagesDB = 'messages'; // db name
+const usersDB = 'users'; // users db name
+const messagesDB = 'messages'; // messages db name
 
 server.listen(3000);
 
@@ -216,7 +218,30 @@ app.post('/register', (req, res) => {
     });
 });
 
-// messages
+// get all users
+app.get('/users', function(req, res) {
+    // get all users
+    var users;
+    const findUsers = function(db, callback) {
+        const collection = db.collection('documents');
+        // no query filter
+        collection.find({}).toArray(function(err, docs) {
+          assert.equal(err, null);
+          users = docs;
+          callback(docs);
+        });
+    }
+    mongo.connect(url, function(err, client) {
+        assert.equal(null, err);
+      
+        const db = client.db(usersDB);
+        findUsers(db, function() {
+            // send users
+            res.status(200).send(users);
+            client.close();
+        });
+    });
+});
 app.get('/messages', function(req, res) {
     // add socket code here?
     mongo.connect(url, function(err, client) {
