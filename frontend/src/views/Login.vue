@@ -88,9 +88,9 @@ export default {
   padding-top:50px;
 }
 .btn {
-    color: white;
-    background-color:  rgb(145, 204, 105);
-    font-weight: bold;
+  color: white;
+  background-color:  rgb(145, 204, 105);
+  font-weight: bold;
 }
 .form-group {
   margin-bottom: 20px;

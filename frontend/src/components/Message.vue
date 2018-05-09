@@ -1,6 +1,7 @@
 <template>
     <div class="msg-container">
-        <div class="username" v-text="username"></div>
+        <div class="username" v-text="recipient"></div>
+        <div class="username text-right" v-text="sender"></div>
         <div class="text" v-text="text"></div>
         <div class="date" v-text="date"></div>
     </div>
@@ -10,7 +11,8 @@
 export default {
   name: 'Message',
   props: {
-    username: String,
+    sender: String,
+    recipient: String,
     text: String,
     date: String
   }

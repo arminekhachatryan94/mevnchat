@@ -5,22 +5,25 @@
     <div class="padding-top-20">
       <message class="margin-bottom-20"
         v-for="message in messages"
-        :username="message.username"
+        :sender="message.sender"
+        :recipient="message.recipient"
         :text="message.text"
         :date="message.date"
         :key="message.id">
       </message>
     </div>
+    <new-message></new-message>
 </div>
 </template>
 
 <script>
 import axios from 'axios'
 import Message from '../components/Message'
+import NewMessage from '../components/NewMessage'
 
 export default {
   name: 'Messages',
-  components: { Message },
+  components: { Message, NewMessage },
   data () {
     return {
       messages: []
