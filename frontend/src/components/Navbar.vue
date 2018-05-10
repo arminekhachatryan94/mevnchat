@@ -7,7 +7,7 @@
         <div class="col-md-6 text-right">
             <router-link v-if="!this.$session.get('auth')" :to="{ name: 'Register' }" class="align-middle">Register</router-link>
             <router-link v-if="!this.$session.get('auth')" :to="{ name: 'Login' }" class="align-middle">Login</router-link>
-            <div v-if="this.$session.get('auth')"></div>
+            <a v-if="this.$session.get('auth')" v-text="this.$session.get('username')"></a>
             <a href="" v-on:click="logout" v-if="this.$session.get('auth')">Log out</a>
         </div>
         <button v-on:click="onClickButton">Add 1</button>

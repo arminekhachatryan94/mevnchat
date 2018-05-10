@@ -48,17 +48,30 @@ const removeUsers = function(db, callback) {
         callback(result);
     });
 }
-
 /*
+var convos;
+    const findConvos = function(db, callback) {
+        // Get the documents collection
+        const collection = db.collection('documents');
+        // Find all documents (no query filter)
+        collection.find( { $or: [ { sender: 'armine' }, { recipient: 'armine' } ] } )
+        .toArray(function(err, docs) {
+            assert.equal(err, null);
+            console.log("Found the following records: " + docs.length);
+            convos = docs;
+            console.log(convos);
+            callback(docs);
+        });
+    }
+
+
 mongo.connect(url, function(err, client) {
     assert.equal(null, err);
     console.log("Connected successfully to server");
   
     const db = client.db(messagesDB);
-    findMessages(db, function() {
-        removeMessage(db, function() {
-            client.close();
-        });
+    findConvos(db, function() {
+        client.close();
     });
 });
 */
@@ -91,20 +104,6 @@ const removeMessage = function(db, callback) {
         assert.equal(1, result.result.n); // 1 document removed based on n
         console.log("Removed 1 message with the field username equal to ani");
         callback(result);
-    });
-}
-
-var messages;
-const findMessages = function(db, callback) {
-    // Get the documents collection
-    const collection = db.collection('documents');
-    // Find all documents (no query filter)
-    collection.find({}).toArray(function(err, docs) {
-      assert.equal(err, null);
-      console.log("Found the following records: " + docs.length);
-      messages = docs;
-      console.log(messages);
-      callback(docs);
     });
 }
 
@@ -303,19 +302,38 @@ app.get('/users', function(req, res) {
     });
 
 // get messages
-app.get('/messages', function(req, res) {
-    // add socket code here?
+app.get('/messages/:username', function(req, res) {
+    var username = req.params.username;
+    
+    var messages;
+    const findMessages = function(db, callback) {
+        // Get the documents collection
+        const collection = db.collection('documents');
+        // Find all documents (no query filter)
+        collection.find( { $or: [ { sender: username }, { recipient: username } ] } )
+        .toArray(function(err, docs) {
+            assert.equal(err, null);
+            console.log("Found the following records: " + docs.length);
+            messages = docs;
+            // console.log(messages);
+            callback(docs);
+        });
+    }
     mongo.connect(url, function(err, client) {
         assert.equal(null, err);
         console.log("Connected successfully to server");
       
         const db = client.db(messagesDB);
         findMessages(db, function() {
+            res.send({ messages: messages } );
             client.close();
         });
-    });
-    console.log('connected');
-    res.send({ messages: messages } );
+    });   
+});
+
+// get conversations
+app.get('/userconvos', function(req, res) {
+    ;
 });
 
 server.listen(3000);

@@ -19,13 +19,6 @@
             </div>
         </div>
         <new-message></new-message>
-        <script type="text/script">
-        console.log("hi");
-        var socket = io('http://localhost'); // connect to server
-        socket.on('newmsg', function(data) { // listen for fromServer message
-            console.log('Sender: ' + data.sender + ', recipient: ' + data.recipient + ', text: ' + data.text);
-        });
-        </script>
     </div>
     <div v-if="!this.$session.get('auth')" class="padding-top-80">
         <div id="home" class="display-1">
@@ -49,7 +42,9 @@ export default {
     }
   },
   created () {
-    axios.get('http://localhost:3000/messages').then(response => {
+      console.log('http://localhost:3000/messages/' + this.$session.get('username'))
+    axios.get('http://localhost:3000/messages/' + this.$session.get('username'))
+    .then(response => {
       this.messages = response.data.messages
     }).catch(e => {
       console.log(e)
