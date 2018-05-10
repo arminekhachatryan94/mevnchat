@@ -54,7 +54,7 @@ export default {
         this.$session.flash.set('loggedin', 'Successfully logged in! Enjoy iChat.')
         this.$session.set('auth', true)
         this.$session.set('username', response.data)
-        location.href = '/#/messages'
+        location.href = '/#/'
         console.log(this.$session.get('username'))
       })
       .catch((error) => {

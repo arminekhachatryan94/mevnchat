@@ -6,7 +6,7 @@
                 <div>Recipient:</div>
                 <div>
                     <select v-model="message.recipient" class="select" required>
-                        <option v-for="user in users" v-if="user.username != message.sender" v-text="user.username" :value="user.username"></option>
+                        <option v-for="user in users" v-if="user.username != message.sender" v-text="user.username" v-bind:key="user.id" :value="user.username"></option>
                     </select>
                 </div>
             </div>
@@ -18,7 +18,7 @@
             </div>
             <button type="submit" class="btn">Send Message</button>
         </form>
-    <div v-if="error.length" v-text="error" class="text-danger"></div>
+        <div v-if="error.length" v-text="error" class="text-danger"></div>
     </div>
 </template>
 
@@ -46,13 +46,16 @@ export default {
         text: this.message.text
       })
       .then((response) => {
-        this.$session.flash.set('newmsg', 'Successfully sent message.')
+        this.$session.start();
+        this.$session.flash.set('newmsg', 'Successfully sent message.');
         console.log(response.data);
       })
       .catch((error) => {
         console.log(error.response.data);
         this.error = error.response.data
-      })
+      });
+      this.message.recipient = '';
+      this.message.text = '';
     }
   },
   created() {

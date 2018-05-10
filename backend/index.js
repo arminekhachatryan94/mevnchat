@@ -37,8 +37,6 @@ const url = 'mongodb://localhost:27017'; // connection url
 const usersDB = 'users'; // users db name
 const messagesDB = 'messages'; // messages db name
 
-server.listen(3000);
-
 const removeUsers = function(db, callback) {
     // Get the documents collection
     const collection = db.collection('documents');
@@ -58,7 +56,9 @@ mongo.connect(url, function(err, client) {
   
     const db = client.db(messagesDB);
     findMessages(db, function() {
-        client.close();
+        removeMessage(db, function() {
+            client.close();
+        });
     });
 });
 */
@@ -86,7 +86,7 @@ const removeMessage = function(db, callback) {
     // Get the documents collection
     const collection = db.collection('documents');
     // Delete document where a is 3
-    collection.deleteOne({ username : 'ani' }, function(err, result) {
+    collection.deleteOne({ sender : 'armine' }, function(err, result) {
         assert.equal(err, null);
         assert.equal(1, result.result.n); // 1 document removed based on n
         console.log("Removed 1 message with the field username equal to ani");
@@ -239,65 +239,68 @@ app.get('/users', function(req, res) {
 });
 
 // create new message
-app.post('/newmessage', function(req, res) {
-    var sender=req.body.sender;
-    var recipient=req.body.recipient;
-    var text=req.body.text;
-    var r = "sender: " + sender + ", recipient: " + recipient + ", text: " + text;
-    if( sender.length != 0 && recipient.length != 0 && text.length !== 0 ){
-        // check if recipient exists
-        let exists;
-        const checkRecipient = function(db, callback) {
-            // Get the documents collection
-            const collection = db.collection('documents');
-            // Find all documents (no query filter)
-            collection.find({ username : recipient }).toArray(function(err, docs) {
-                assert.equal(err, null);
-                console.log("Found the following records: " + docs.length);
-                exists = (docs.length == 0 ? false : true);
-                callback(docs);
-            });
-        }
+    app.post('/newmessage', function(req, res) {
+        var sender=req.body.sender;
+        var recipient=req.body.recipient;
+        var text=req.body.text;
+        var r = "sender: " + sender + ", recipient: " + recipient + ", text: " + text;
+        if( sender.length != 0 && recipient.length != 0 && text.length !== 0 ){
+            // check if recipient exists
+            let exists;
+            const checkRecipient = function(db, callback) {
+                // Get the documents collection
+                const collection = db.collection('documents');
+                // Find all documents (no query filter)
+                collection.find({ username : recipient }).toArray(function(err, docs) {
+                    assert.equal(err, null);
+                    console.log("Found the following records: " + docs.length);
+                    exists = (docs.length == 0 ? false : true);
+                    callback(docs);
+                });
+            }
 
-        const insertMessage = function(db, callback) {
-            // Get the documents collection
-            const collection = db.collection('documents');
-            // Insert some documents
-            collection.insertMany([
-                {
-                    sender: sender,
-                    recipient: recipient,
-                    text: text,
-                }
-            ], function(err, result) {
-                assert.equal(err, null);
-                assert.equal(1, result.ops.length);
-                console.log("Inserted 1 message into the collection");
-                callback(result);
-            });
-        }
+            const insertMessage = function(db, callback) {
+                // Get the documents collection
+                const collection = db.collection('documents');
+                // Insert some documents
+                collection.insertMany([
+                    {
+                        sender: sender,
+                        recipient: recipient,
+                        text: text,
+                    }
+                ], function(err, result) {
+                    assert.equal(err, null);
+                    assert.equal(1, result.ops.length);
+                    console.log("Inserted 1 message into the collection");
+                    callback(result);
+                });
+            }
 
-        mongo.connect(url, function(err, client) {
-            assert.equal(null, err);
-            const db = client.db(usersDB);
-            const db2 = client.db(messagesDB);
+            mongo.connect(url, function(err, client) {
+                assert.equal(null, err);
+                const db = client.db(usersDB);
+                const db2 = client.db(messagesDB);
 
-            checkRecipient(db, function() {
-                if( exists ){
-                    insertMessage(db2, function() {
-                        res.status(200).send({sender: sender, recipient: recipient, text: text});
+                checkRecipient(db, function() {
+                    if( exists ){
+                        insertMessage(db2, function() {
+                            res.status(200).send({});
+                            io.on('connection', function(socket) {
+                                socket.emit('newmsg', {sender: sender, recipient: recipient, text: text});
+                            });
+                            client.close();
+                        });
+                    } else {
+                        res.status(400).send("Recipient doesn't exist");
                         client.close();
-                    });
-                } else {
-                    res.status(400).send("Recipient doesn't exist");
-                    client.close();
-                }
+                    }
+                });
             });
-        });
-    } else {
-        res.status(400).send("Empty fields are invalid");
-    }
-});
+        } else {
+            res.status(400).send("Empty fields are invalid");
+        }
+    });
 
 // get messages
 app.get('/messages', function(req, res) {
@@ -314,3 +317,5 @@ app.get('/messages', function(req, res) {
     console.log('connected');
     res.send({ messages: messages } );
 });
+
+server.listen(3000);
