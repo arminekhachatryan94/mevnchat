@@ -4,6 +4,7 @@ import Home from '@/views/home'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
 import Messages from '@/views/Messages'
+import Conversation from '@/views/Conversation'
 import Error from '@/views/Error'
 
 Vue.use(Router)
@@ -29,6 +30,11 @@ export default new Router({
       path: '/messages',
       name: 'Messages',
       component: Messages
+    },
+    {
+      path: '/messages/:username',
+      name: 'Conversation',
+      component: Conversation
     },
     {
       path: '*',
