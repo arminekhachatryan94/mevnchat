@@ -42,7 +42,6 @@ export default {
     }
   },
   created () {
-      console.log('http://localhost:3000/messages/' + this.$session.get('username'))
     axios.get('http://localhost:3000/messages/' + this.$session.get('username'))
     .then(response => {
       this.messages = response.data.messages

@@ -331,9 +331,48 @@ app.get('/messages/:username', function(req, res) {
     });   
 });
 
-// get conversations
-app.get('/userconvos', function(req, res) {
-    ;
+// get conversation with another user
+app.get('/messages/:username/:user2', function(req, res) {
+    /*
+    username = logged in user
+    user2 = who logged in user conversed with
+    */
+   var username = req.params.username;
+   var user2 = req.params.user2;
+
+   var messages;
+    const findConversation = function(db, callback) {
+        // Get the documents collection
+        const collection = db.collection('documents');
+        // Find all documents (no query filter)
+        collection.find( {
+            $or: [
+                { $and: [
+                    { sender: username },
+                    { recipient: user2 } 
+                ]},
+                { $and: [
+                    { sender: user2 },
+                    { recipient: username }
+                ]}
+        ]} ).toArray(function(err, docs) {
+            assert.equal(err, null);
+            console.log("Found the following records: " + docs.length);
+            messages = docs;
+            // console.log(messages);
+            callback(docs);
+        });
+    }
+    mongo.connect(url, function(err, client) {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+
+        const db = client.db(messagesDB);
+        findConversation(db, function() {
+            res.send({ messages: messages } );
+            client.close();
+        });
+    });  
 });
 
 server.listen(3000);
