@@ -37,6 +37,9 @@ const url = 'mongodb://localhost:27017'; // connection url
 const usersDB = 'users'; // users db name
 const messagesDB = 'messages'; // messages db name
 
+var moment = require('moment');
+
+/*
 const removeUsers = function(db, callback) {
     // Get the documents collection
     const collection = db.collection('documents');
@@ -48,35 +51,20 @@ const removeUsers = function(db, callback) {
         callback(result);
     });
 }
-/*
-var convos;
-    const findConvos = function(db, callback) {
-        // Get the documents collection
-        const collection = db.collection('documents');
-        // Find all documents (no query filter)
-        collection.find( { $or: [ { sender: 'armine' }, { recipient: 'armine' } ] } )
-        .toArray(function(err, docs) {
-            assert.equal(err, null);
-            console.log("Found the following records: " + docs.length);
-            convos = docs;
-            console.log(convos);
-            callback(docs);
-        });
-    }
-
 
 mongo.connect(url, function(err, client) {
     assert.equal(null, err);
     console.log("Connected successfully to server");
   
     const db = client.db(messagesDB);
-    findConvos(db, function() {
+    removeMessage(db, function() {
         client.close();
     });
 });
 */
-
 /* MESSAGES TABLE FUNCTIONS */
+
+/*
 const insertMessages = function(db, callback) {
     // Get the documents collection
     const collection = db.collection('documents');
@@ -95,17 +83,19 @@ const insertMessages = function(db, callback) {
     });
 }
 
+
 const removeMessage = function(db, callback) {
     // Get the documents collection
     const collection = db.collection('documents');
     // Delete document where a is 3
-    collection.deleteOne({ sender : 'armine' }, function(err, result) {
+    collection.deleteOne( { sender : '' }, function(err, result) {
         assert.equal(err, null);
         assert.equal(1, result.result.n); // 1 document removed based on n
         console.log("Removed 1 message with the field username equal to ani");
         callback(result);
     });
 }
+*/
 
 /* USERS FUNCTIONS */
 
@@ -267,6 +257,7 @@ app.get('/users', function(req, res) {
                         sender: sender,
                         recipient: recipient,
                         text: text,
+                        date: (moment(new Date())).toString()
                     }
                 ], function(err, result) {
                     assert.equal(err, null);
@@ -329,6 +320,38 @@ app.get('/messages/:username', function(req, res) {
             client.close();
         });
     });   
+});
+
+// find all conversation with distinct users
+app.get('/convos/username', function(req, res) {
+    var username = req.params.username;
+
+    const findConvos = function(db, callback) {
+        // Get the documents collection
+        const collection = db.collection('documents');
+        // Find all documents (no query filter)
+        collection.find( {
+            $or: [
+                    { sender: username },
+                    { recipient: user2 }
+        ]} ).toArray(function(err, docs) {
+            assert.equal(err, null);
+            console.log("Found the following records: " + docs.length);
+            messages = docs;
+            // console.log(messages);
+            callback(docs);
+        });
+    }
+    mongo.connect(url, function(err, client) {
+        assert.equal(null, err);
+        console.log("Connected successfully to server");
+
+        const db = client.db(messagesDB);
+        findConvos(db, function() {
+            res.send({ messages: messages } );
+            client.close();
+        });
+    });
 });
 
 // get conversation with another user

@@ -3,11 +3,13 @@
         <div class="username" v-text="recipient"></div>
         <div class="username text-right" v-text="sender"></div>
         <div class="text" v-text="text"></div>
-        <div class="date" v-text="date"></div>
+        <div class="date" v-text="dateTime(date)"></div>
     </div>
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'Message',
   props: {
@@ -15,6 +17,11 @@ export default {
     recipient: String,
     text: String,
     date: String
+  },
+  methods: {
+    dateTime: function(date) {
+      return moment(date).format('MMMM DD YYYY, h:mma');
+    }
   }
 }
 </script>
