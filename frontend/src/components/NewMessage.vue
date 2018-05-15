@@ -1,6 +1,5 @@
 <template>
     <div class="msg-container padding-20">
-        <div class="bg-success text-white" v-text="this.$session.flash.get('newmsg')"></div>
         <form method="POST" @submit.prevent="onSubmit">
             <div class="form-group">
                 <div>Recipient:</div>

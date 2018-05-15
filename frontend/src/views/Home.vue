@@ -1,5 +1,6 @@
 <template>
 <div class="padding-top-20">
+    <div class="bg-success text-white" v-text="this.$session.flash.get('newmsg')"></div>
     <div v-if="this.$session.get('auth')">
         <div class="bg-success text-white" v-text="this.$session.flash.get('loggedin')"></div>
         <div class="title display-4 padding-top-10">Recent Activity</div>
