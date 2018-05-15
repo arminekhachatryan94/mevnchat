@@ -62,6 +62,7 @@ mongo.connect(url, function(err, client) {
     });
 });
 */
+
 /* MESSAGES TABLE FUNCTIONS */
 
 /*
@@ -88,7 +89,7 @@ const removeMessage = function(db, callback) {
     // Get the documents collection
     const collection = db.collection('documents');
     // Delete document where a is 3
-    collection.deleteOne( { sender : '' }, function(err, result) {
+    collection.deleteOne( { sender : 'armine' }, function(err, result) {
         assert.equal(err, null);
         assert.equal(1, result.result.n); // 1 document removed based on n
         console.log("Removed 1 message with the field username equal to ani");
@@ -228,6 +229,7 @@ app.get('/users', function(req, res) {
 });
 
 // create new message
+io.on('connection', function(socket) {
     app.post('/newmessage', function(req, res) {
         var sender=req.body.sender;
         var recipient=req.body.recipient;
@@ -276,9 +278,7 @@ app.get('/users', function(req, res) {
                     if( exists ){
                         insertMessage(db2, function() {
                             res.status(200).send({});
-                            io.on('connection', function(socket) {
-                                socket.emit('newmsg', {sender: sender, recipient: recipient, text: text});
-                            });
+                            io.emit('newmsg', {sender: sender, recipient: recipient, text: text});
                             client.close();
                         });
                     } else {
@@ -291,6 +291,8 @@ app.get('/users', function(req, res) {
             res.status(400).send("Empty fields are invalid");
         }
     });
+});
+
 
 // get messages
 app.get('/messages/:username', function(req, res) {
@@ -323,22 +325,24 @@ app.get('/messages/:username', function(req, res) {
 });
 
 // find all conversation with distinct users
-app.get('/convos/username', function(req, res) {
+app.get('/convos/:username', function(req, res) {
     var username = req.params.username;
 
+    var messages;
     const findConvos = function(db, callback) {
         // Get the documents collection
         const collection = db.collection('documents');
         // Find all documents (no query filter)
         collection.find( {
             $or: [
-                    { sender: username },
-                    { recipient: user2 }
-        ]} ).toArray(function(err, docs) {
+                { sender: username },
+                { recipient: username }
+        ]} ).distinct('sender', 'recipient').toArray(function(err, docs) {
             assert.equal(err, null);
             console.log("Found the following records: " + docs.length);
             messages = docs;
-            // console.log(messages);
+            console.log(messages);
+            res.status(200).send(messages);
             callback(docs);
         });
     }

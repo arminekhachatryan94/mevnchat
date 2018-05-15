@@ -6,6 +6,9 @@ import router from './router'
 import VueSession from 'vue-session'
 Vue.use(VueSession)
 
+import VueSocketio from 'vue-socket.io'
+Vue.use(VueSocketio, 'http://localhost:3000')
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

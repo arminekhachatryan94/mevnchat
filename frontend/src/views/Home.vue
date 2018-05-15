@@ -41,6 +41,14 @@ export default {
       messages: []
     }
   },
+  sockets: {
+    connect: function(){
+      console.log('socket connected');
+    },
+    newmsg: function(data) {
+      this.messages.push(data);
+    }
+  },
   created () {
     axios.get('http://localhost:3000/messages/' + this.$session.get('username'))
     .then(response => {

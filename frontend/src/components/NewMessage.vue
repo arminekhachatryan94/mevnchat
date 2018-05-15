@@ -48,7 +48,7 @@ export default {
       .then((response) => {
         this.$session.start();
         this.$session.flash.set('newmsg', 'Successfully sent message.');
-        console.log(response.data);
+        // console.log(response.data);
       })
       .catch((error) => {
         console.log(error.response.data);
