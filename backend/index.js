@@ -304,6 +304,7 @@ app.get('/messages/:username', function(req, res) {
         const collection = db.collection('documents');
         // Find all documents (no query filter)
         collection.find( { $or: [ { sender: username }, { recipient: username } ] } )
+        .sort({ date: -1 }).limit(50)
         .toArray(function(err, docs) {
             assert.equal(err, null);
             console.log("Found the following records: " + docs.length);
