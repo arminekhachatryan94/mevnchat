@@ -210,7 +210,8 @@ app.get('/users', function(req, res) {
     const findUsers = function(db, callback) {
         const collection = db.collection('documents');
         // no query filter
-        collection.find({}).toArray(function(err, docs) {
+        collection.find({}).sort( {username: 1} )
+        .toArray(function(err, docs) {
           assert.equal(err, null);
           users = docs;
           callback(docs);
