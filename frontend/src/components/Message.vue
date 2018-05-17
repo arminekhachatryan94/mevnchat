@@ -47,8 +47,6 @@ export default {
 .msg-container {
     border: 2px solid rgb(145, 204, 105);
     border-radius: 25px;
-    margin-left: 200px;
-    margin-right: 200px;
 }
 .username {
     text-align: left;

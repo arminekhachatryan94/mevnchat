@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <navbar @clicked="onClickChild"></navbar>
-      <router-view/>
-      <div v-text="a"></div>
+    <router-view/>
+    <div v-text="a"></div>
   </div>
 </template>
 

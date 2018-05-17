@@ -3,16 +3,20 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
 import VueSession from 'vue-session'
-Vue.use(VueSession)
-
+import Vuex from 'vuex'
+import VueChatScroll from 'vue-chat-scroll'
 import VueSocketio from 'vue-socket.io'
+
+Vue.use(VueSession)
+Vue.use(Vuex)
+Vue.use(VueChatScroll)
 Vue.use(VueSocketio, 'http://localhost:3000')
+
 
 Vue.config.productionTip = false
 
-Vue.prototype.$eventHub = new Vue(); // Global event bus
+Vue.prototype.$eventHub = new Vue() // Global event bus
 
 /* eslint-disable no-new */
 new Vue({

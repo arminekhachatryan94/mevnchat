@@ -9,7 +9,7 @@
             <div v-if="messages.length == 0" class="padding-30">
                 No messages
             </div>
-            <div v-if="messages.length">
+            <div v-if="messages.length" class="padding-right-200 padding-left-200">
                 <message class="margin-bottom-20"
                     v-for="message in messages"
                     :sender="message.sender"
@@ -56,6 +56,7 @@ export default {
     axios.get('http://localhost:3000/messages/' + this.$session.get('username'))
     .then(response => {
       this.messages = response.data.messages
+      this.messages = this.messages.reverse()
     }).catch(e => {
       console.log(e)
     })
@@ -85,5 +86,11 @@ export default {
 }
 .margin-bottom-20 {
     margin-bottom: 20px;
+}
+.padding-left-200 {
+  padding-left: 200px;
+}
+.padding-right-200 {
+  padding-right: 200px;
 }
 </style>

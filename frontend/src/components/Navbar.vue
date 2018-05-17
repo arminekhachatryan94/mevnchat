@@ -20,7 +20,7 @@ export default {
   name: 'Navbar',
   data () {
     return {
-      auth,
+      auth: false,
     }
   },
   methods: {
@@ -35,6 +35,7 @@ export default {
     }
   },
   created() {
+    this.$session.start();
     if( this.$session.get('auth') ){
       this.auth = true;
     } else{
