@@ -4,6 +4,7 @@
     <div v-if="this.$session.get('auth')">
         <div class="bg-success text-white" v-text="this.$session.flash.get('loggedin')"></div>
         <div class="title display-4 padding-top-10">Recent Activity</div>
+        <new-message v-if="this.$session.get('auth')"></new-message>
         <div class="padding-top-20">
             <div v-if="messages.length == 0" class="padding-30">
                 No messages
@@ -19,7 +20,6 @@
                 </message>
             </div>
         </div>
-        <new-message v-if="this.$session.get('auth')"></new-message>
     </div>
     <div v-if="!this.$session.get('auth')" class="padding-top-80">
         <div id="home" class="display-1">
@@ -48,7 +48,7 @@ export default {
     },
     newmsg: function(data) {
       if( data.sender == this.$session.get('username') || data.recipient == this.$session.get('username') ){
-        this.messages.push(data);
+        this.messages.unshift(data);
       }
     }
   },

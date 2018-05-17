@@ -1,10 +1,11 @@
 <template>
     <nav class="text-white row col-md-12 padding-top-10">
-        <span class="col-md-6 text-left">
-            <router-link :to="{ name: 'Home' }" id="title">iChat</router-link>
+        <span class="col-md-8 text-left">
+            <router-link :to="{ name: 'Home' }" id="title-nav">iChat</router-link>
             <router-link v-if="this.auth" :to="{ name: 'Messages' }">Messages</router-link>
+            <router-link v-if="this.auth" :to="{ name: 'Compose' }">Compose</router-link>
         </span>
-        <div class="col-md-6 text-right">
+        <div class="col-md-4 text-right">
             <router-link v-if="!this.auth" :to="{ name: 'Register' }" class="align-middle">Register</router-link>
             <router-link v-if="!this.auth" :to="{ name: 'Login' }" class="align-middle">Login</router-link>
             <a v-if="this.auth" v-text="this.$session.get('username')"></a>
@@ -59,7 +60,7 @@ a {
     font-size: 20px;
     padding: 5px;
 }
-#title {
+#title-nav {
     font-size: 30px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
 }

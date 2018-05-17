@@ -1,5 +1,5 @@
 <template>
-    <div class="msg-container padding-20">
+    <div class="msg-container padding-20 margin-top-10">
         <form method="POST" @submit.prevent="onSubmit">
             <div class="form-group">
                 <div>Recipient:</div>
@@ -74,6 +74,15 @@ export default {
     border: 2px solid rgb(145, 204, 105);
     margin-left: 200px;
     margin-right: 200px;
+}
+.margin-top-10 {
+    margin-top: 10px;
+}
+.padding-top-10 {
+    padding-top: 10px;
+}
+.padding-bottom-10 {
+    padding-bottom: 10px;
 }
 .padding-20 {
     padding: 20px;

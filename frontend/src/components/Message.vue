@@ -1,5 +1,5 @@
 <template>
-    <div class="msg-container cursor">
+    <div class="msg-container cursor" v-on:click="clicked">
         <div class="username">
             <div v-if="ifSender()"><i class="green">You sent to</i> {{this.recipient}}</div>
             <div v-if="!ifSender()">{{this.sender}}</div>
@@ -30,6 +30,13 @@ export default {
       }
       else {
         return false;
+      }
+    },
+    clicked() {
+      if( this.ifSender() ){
+        location.href="/#/messages/" + this.recipient;
+      } else{
+        location.href="/#/messages/" + this.sender;
       }
     }
   }
