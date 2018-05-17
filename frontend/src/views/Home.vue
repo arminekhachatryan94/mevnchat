@@ -19,7 +19,7 @@
                 </message>
             </div>
         </div>
-        <new-message></new-message>
+        <new-message v-if="this.$session.get('auth')"></new-message>
     </div>
     <div v-if="!this.$session.get('auth')" class="padding-top-80">
         <div id="home" class="display-1">
@@ -47,7 +47,9 @@ export default {
       console.log('socket connected');
     },
     newmsg: function(data) {
-      this.messages.push(data);
+      if( data.sender == this.$session.get('username') || data.recipient == this.$session.get('username') ){
+        this.messages.push(data);
+      }
     }
   },
   created () {

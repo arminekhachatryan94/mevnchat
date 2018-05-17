@@ -2,13 +2,13 @@
     <nav class="text-white row col-md-12 padding-top-10">
         <span class="col-md-6 text-left">
             <router-link :to="{ name: 'Home' }" id="title">iChat</router-link>
-            <router-link v-if="this.$session.get('auth')" :to="{ name: 'Messages' }">Messages</router-link>
+            <router-link v-if="this.auth" :to="{ name: 'Messages' }">Messages</router-link>
         </span>
         <div class="col-md-6 text-right">
-            <router-link v-if="!this.$session.get('auth')" :to="{ name: 'Register' }" class="align-middle">Register</router-link>
-            <router-link v-if="!this.$session.get('auth')" :to="{ name: 'Login' }" class="align-middle">Login</router-link>
-            <a v-if="this.$session.get('auth')" v-text="this.$session.get('username')"></a>
-            <a href="" v-on:click="logout" v-if="this.$session.get('auth')">Log out</a>
+            <router-link v-if="!this.auth" :to="{ name: 'Register' }" class="align-middle">Register</router-link>
+            <router-link v-if="!this.auth" :to="{ name: 'Login' }" class="align-middle">Login</router-link>
+            <a v-if="this.auth" v-text="this.$session.get('username')"></a>
+            <a href="" v-on:click="logout" v-if="this.auth">Log out</a>
         </div>
         <button v-on:click="onClickButton">Add 1</button>
     </nav>
@@ -17,13 +17,34 @@
 <script>
 export default {
   name: 'Navbar',
+  data () {
+    return {
+      auth,
+    }
+  },
   methods: {
     onClickButton (event) {
       this.$emit('clicked', 1)
     },
     logout() {
-        this.$session.destroy();
+      this.$session.destroy();
+    },
+    changeAuth(data) {
+      this.auth = data;
     }
+  },
+  created() {
+    if( this.$session.get('auth') ){
+      this.auth = true;
+    } else{
+      this.auth = false;
+    }
+  },
+  mounted() {
+    this.$eventHub.$on('logged', this.changeAuth);
+  },
+  beforeDestroy() {
+    this.$eventHub.$off('logged');
   }
 }
 </script>

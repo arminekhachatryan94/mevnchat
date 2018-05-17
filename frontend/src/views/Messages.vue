@@ -23,7 +23,7 @@ export default {
     }
   },
   created () {
-    axios.get('http://localhost:3000/messages').then(response => {
+    axios.get('http://localhost:3000/convos/' + this.$session.get('username') ).then(response => {
       this.messages = response.data.messages
     }).catch(e => {
       console.log(e)

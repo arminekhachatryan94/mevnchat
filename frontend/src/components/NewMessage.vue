@@ -4,7 +4,8 @@
             <div class="form-group">
                 <div>Recipient:</div>
                 <div>
-                    <select v-model="message.recipient" class="select" required>
+                    <select v-model="message.recipient" class="select" value="default" required>
+                        <option value="default" selected disabled>Select a Recipient</option>
                         <option v-for="user in users" v-if="user.username != message.sender" v-text="user.username" v-bind:key="user.id" :value="user.username"></option>
                     </select>
                 </div>

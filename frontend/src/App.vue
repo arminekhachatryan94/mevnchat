@@ -14,7 +14,7 @@ export default {
   components: { Navbar },
   data () {
     return {
-      a: 1
+      a: 1,
     }
   },
   methods: {
