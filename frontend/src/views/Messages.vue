@@ -1,12 +1,18 @@
 <template>
 <div>
-    <div class="title display-4 padding-top-10">Messages</div>
+    <div id="title" class="display-4 padding-top-10">Messages</div>
     <div class="padding-top-20">
       <div v-if="conversations.length == 0">
         No Conversations
       </div>
       <div v-if="conversations.length">
         <!-- conversations -->
+        <convo v-for="convo in conversations"
+          :sender="convo.sender"
+          :recipient="convo.recipient"
+          :text="convo.text"
+          :date="convo.date"
+          :key="convo.id"></convo>
       </div>
     </div>
 </div>
@@ -14,9 +20,11 @@
 
 <script>
 import axios from 'axios'
+import Convo from '../components/Convo'
 
 export default {
   name: 'Messages',
+  components: { Convo },
   data () {
     return {
       conversations: []
@@ -24,7 +32,7 @@ export default {
   },
   created () {
     axios.get('http://localhost:3000/convos/' + this.$session.get('username') ).then(response => {
-      this.messages = response.data.messages
+      this.conversations = response.data.messages;
     }).catch(e => {
       console.log(e)
     })
@@ -32,8 +40,8 @@ export default {
 }
 </script>
 
-<style>
-.title {
+<style scoped>
+#title {
   color: rgb(145, 204, 105);
 }
 .margin-bottom-20 {
