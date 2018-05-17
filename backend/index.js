@@ -339,22 +339,43 @@ app.get('/convos/:username', function(req, res) {
             $or: [
                 { sender: username },
                 { recipient: username }
-        ]} ).distinct('sender', 'recipient').toArray(function(err, docs) {
+        ]} )
+        .sort({ date: -1 })
+        .toArray(function(err, docs) {
             assert.equal(err, null);
             console.log("Found the following records: " + docs.length);
             messages = docs;
-            console.log(messages);
-            res.status(200).send(messages);
             callback(docs);
         });
     }
+
+    var getUniques = function(messages, username){
+        var newmsgs = [];
+        var names = [];
+        for( var i = 0; i < messages.length; i++ ){
+            if( messages[i].recipient == username ){
+                if( !(names.includes(messages[i].sender)) ){
+                    names.push(messages[i].sender);
+                    newmsgs.push(messages[i]);
+                }
+            } else if( messages[i].sender == username ){
+                if( !(names.includes(messages[i].recipient)) ){
+                    names.push(messages[i].recipient);
+                    newmsgs.push(messages[i]);
+                }
+            }
+        }
+        return newmsgs;
+    }
+
     mongo.connect(url, function(err, client) {
         assert.equal(null, err);
         console.log("Connected successfully to server");
 
         const db = client.db(messagesDB);
         findConvos(db, function() {
-            res.send({ messages: messages } );
+            var results = getUniques(messages, username);
+            res.send({ messages: results } );
             client.close();
         });
     });
@@ -366,10 +387,10 @@ app.get('/messages/:username/:user2', function(req, res) {
     username = logged in user
     user2 = who logged in user conversed with
     */
-   var username = req.params.username;
-   var user2 = req.params.user2;
+    var username = req.params.username;
+    var user2 = req.params.user2;
 
-   var messages;
+    var messages;
     const findConversation = function(db, callback) {
         // Get the documents collection
         const collection = db.collection('documents');
