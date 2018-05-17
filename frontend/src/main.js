@@ -13,10 +13,9 @@ Vue.use(Vuex)
 Vue.use(VueChatScroll)
 Vue.use(VueSocketio, 'http://localhost:3000')
 
+Vue.prototype.$eventHub = new Vue() // Global event bus
 
 Vue.config.productionTip = false
-
-Vue.prototype.$eventHub = new Vue() // Global event bus
 
 /* eslint-disable no-new */
 new Vue({

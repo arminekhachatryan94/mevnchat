@@ -13,7 +13,7 @@
             <div class="form-group">
                 <div>Message:</div>
                 <div>
-                    <textarea v-model="message.text" required></textarea>
+                    <textarea v-model="message.text" placeholder="New Message" class="w50" required></textarea>
                 </div>
             </div>
             <button type="submit" class="btn">Send Message</button>
@@ -91,5 +91,8 @@ export default {
     color: white;
     background-color:  rgb(145, 204, 105);
     font-weight: bold;
+}
+.w50 {
+    width: 50%;
 }
 </style>

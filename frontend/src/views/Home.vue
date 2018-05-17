@@ -56,7 +56,6 @@ export default {
     axios.get('http://localhost:3000/messages/' + this.$session.get('username'))
     .then(response => {
       this.messages = response.data.messages
-      this.messages = this.messages.reverse()
     }).catch(e => {
       console.log(e)
     })

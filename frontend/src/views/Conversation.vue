@@ -7,7 +7,7 @@
       No messages
     </div>
     <div class="margin-lr-100">
-      <div v-if="messages.length" id="scrollbox" v-chat-scroll="{always: true}">
+      <div v-if="messages.length" id="scrollbox" v-chat-scroll>
         <message class="margin-bottom-10 margin-top-10"
           v-for="message in messages"
           :sender="message.sender"
@@ -24,7 +24,7 @@
       <form method="POST" @submit.prevent="onSubmit">
         <div class="form-group">
           <div>
-            <textarea class="textarea" v-model="msg.text" v-on:keydown="deleteError" required></textarea>
+            <textarea class="textarea" v-model="msg.text" v-on:keydown="deleteError" placeholder="New Message" required></textarea>
           </div>
         </div>
         <button type="submit" class="btn">Send Message</button>
