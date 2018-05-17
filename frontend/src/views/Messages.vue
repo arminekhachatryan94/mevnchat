@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div id="title" class="display-4 padding-top-10">Messages</div>
+    <div id="title" class="display-4 padding-top-10">Conversations</div>
     <div class="padding-top-20">
       <div v-if="conversations.length == 0">
         No Conversations

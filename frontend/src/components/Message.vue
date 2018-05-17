@@ -1,7 +1,9 @@
 <template>
-    <div class="msg-container">
-        <div class="username" v-text="recipient"></div>
-        <div class="username text-right" v-text="sender"></div>
+    <div class="msg-container cursor">
+        <div class="username">
+            <div v-if="ifSender()"><i class="green">You sent to</i> {{this.recipient}}</div>
+            <div v-if="!ifSender()">{{this.sender}}</div>
+        </div>
         <div class="text" v-text="text"></div>
         <div class="date" v-text="dateTime(date)"></div>
     </div>
@@ -21,6 +23,14 @@ export default {
   methods: {
     dateTime: function(date) {
       return moment(date).format('MMMM DD YYYY, h:mma');
+    },
+    ifSender() {
+      if( this.sender == this.$session.get('username') ){
+        return true;
+      }
+      else {
+        return false;
+      }
     }
   }
 }
@@ -52,5 +62,11 @@ export default {
     padding-bottom: 10px;
     font-style: italic;
     font-size: 13px;
+}
+.cursor {
+    cursor: pointer;
+}
+.green {
+    color: rgb(145, 204, 105);
 }
 </style>
