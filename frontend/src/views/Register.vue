@@ -49,8 +49,13 @@ export default {
         password: this.credentials.password
       })
       .then((response) => {
-        this.$session.flash.set('registered', 'Successfully registered! Please login to continue.');
-        location.href = '/#/login'
+        this.$session.start()
+        this.$session.flash.set('registered', 'Successfully registered! Enjoy iChat' + response.data + '.')
+        this.$session.set('auth', true)
+        this.$session.set('username', response.data)
+        this.$store.commit('login', response.data)
+        console.log(this.$store.state.auth)
+        location.href = '/#/'
       })
       .catch((error) => {
         this.error = error.response.data

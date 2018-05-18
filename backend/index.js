@@ -186,7 +186,7 @@ app.post('/register', (req, res) => {
                 if( username.length != 0 || password.length != 0 ){
                     // insertUser
                     insertUser(db, function() {
-                        res.status(200).send( 'Successfully created user.' );
+                        res.status(200).send( username );
                         client.close();
                     });
                 }
