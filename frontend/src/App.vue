@@ -2,7 +2,6 @@
   <div id="app">
     <navbar @clicked="onClickChild"></navbar>
     <router-view/>
-    <div v-text="a"></div>
   </div>
 </template>
 
@@ -13,9 +12,7 @@ export default {
   name: 'App',
   components: { Navbar },
   data () {
-    return {
-      a: 1,
-    }
+    return {}
   },
   methods: {
     onClickChild (value) {

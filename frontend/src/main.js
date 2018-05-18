@@ -16,7 +16,7 @@ Vue.use(VueSocketio, 'http://localhost:3000')
 const store = new Vuex.Store({
   state: {
     auth: false,
-    username: 'hi'
+    username: ''
   },
   mutations: {
     logout (state) {
@@ -29,8 +29,6 @@ const store = new Vuex.Store({
     }
   }
 });
-
-Vue.prototype.$eventHub = new Vue() // Global event bus
 
 Vue.config.productionTip = false
 

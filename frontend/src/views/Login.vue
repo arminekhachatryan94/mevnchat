@@ -56,9 +56,7 @@ export default {
         this.$session.set('username', response.data)
         this.$store.commit('login', response.data)
         console.log(this.$store.state.auth)
-        // this.$eventHub.$on('logged', true)
         location.href = '/#/'
-        // console.log(this.$session.get('username'))
       })
       .catch((error) => {
         this.error = error.response.data

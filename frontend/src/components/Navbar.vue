@@ -8,10 +8,9 @@
         <div class="col-md-4 text-right">
             <router-link v-if="!this.auth0" :to="{ name: 'Register' }" class="align-middle">Register</router-link>
             <router-link v-if="!this.auth0" :to="{ name: 'Login' }" class="align-middle">Login</router-link>
-            <a v-if="this.auth0" v-text="this.username"></a>
-            <a href="" v-on:click="logout" v-if="this.auth0">Log out</a>
+            <a v-if="this.auth0" v-text="this.$store.state.username"></a>
+            <a href="" v-on:click="logout" v-if="auth0">Log out</a>
         </div>
-        <button v-on:click="onClickButton">Add 1</button>
     </nav>
 </template>
 
@@ -20,8 +19,6 @@ export default {
   name: 'Navbar',
   data () {
     return {
-      username: this.username0,
-      auth: this.auth0
     }
   },
   created() {
@@ -35,23 +32,10 @@ export default {
     }
   },
   methods: {
-    onClickButton (event) {
-      this.$emit('clicked', 1)
-    },
     logout() {
       this.$session.destroy();
       this.$store.commit('logout');
-    },
-    /*
-    changeAuth(data) {
-      this.auth = data;
-    }*/
-  },
-  mounted() {
-    this.$eventHub.$on('logged', this.changeAuth);
-  },
-  beforeDestroy() {
-    this.$eventHub.$off('logged');
+    }
   }
 }
 </script>
