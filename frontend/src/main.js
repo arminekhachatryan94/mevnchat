@@ -13,6 +13,23 @@ Vue.use(Vuex)
 Vue.use(VueChatScroll)
 Vue.use(VueSocketio, 'http://localhost:3000')
 
+const store = new Vuex.Store({
+  state: {
+    auth: false,
+    username: 'hi'
+  },
+  mutations: {
+    logout (state) {
+      state.auth = false;
+      state.username = '';
+    },
+    login (state, username) {
+      state.auth = true;
+      state.username = username;
+    }
+  }
+});
+
 Vue.prototype.$eventHub = new Vue() // Global event bus
 
 Vue.config.productionTip = false
@@ -22,5 +39,6 @@ new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  store: store
 })

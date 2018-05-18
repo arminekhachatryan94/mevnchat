@@ -2,14 +2,14 @@
     <nav class="text-white row col-md-12 padding-top-10">
         <span class="col-md-8 text-left">
             <router-link :to="{ name: 'Home' }" id="title-nav">iChat</router-link>
-            <router-link v-if="this.auth" :to="{ name: 'Messages' }">Messages</router-link>
-            <router-link v-if="this.auth" :to="{ name: 'Compose' }">Compose</router-link>
+            <router-link v-if="this.auth0" :to="{ name: 'Messages' }">Messages</router-link>
+            <router-link v-if="this.auth0" :to="{ name: 'Compose' }">Compose</router-link>
         </span>
         <div class="col-md-4 text-right">
-            <router-link v-if="!this.auth" :to="{ name: 'Register' }" class="align-middle">Register</router-link>
-            <router-link v-if="!this.auth" :to="{ name: 'Login' }" class="align-middle">Login</router-link>
-            <a v-if="this.auth" v-text="this.$session.get('username')"></a>
-            <a href="" v-on:click="logout" v-if="this.auth">Log out</a>
+            <router-link v-if="!this.auth0" :to="{ name: 'Register' }" class="align-middle">Register</router-link>
+            <router-link v-if="!this.auth0" :to="{ name: 'Login' }" class="align-middle">Login</router-link>
+            <a v-if="this.auth0" v-text="this.username"></a>
+            <a href="" v-on:click="logout" v-if="this.auth0">Log out</a>
         </div>
         <button v-on:click="onClickButton">Add 1</button>
     </nav>
@@ -20,7 +20,18 @@ export default {
   name: 'Navbar',
   data () {
     return {
-      auth: false,
+      username: this.username0,
+      auth: this.auth0
+    }
+  },
+  created() {
+  },
+  computed: {
+    username0() {
+      return ( (this.$store.state.auth !== false) ? this.$state.state.username : '' );
+    },
+    auth0() {
+      return ( (this.$store.state.auth !== false) ? this.$store.state.auth : false );
     }
   },
   methods: {
@@ -29,18 +40,12 @@ export default {
     },
     logout() {
       this.$session.destroy();
+      this.$store.commit('logout');
     },
+    /*
     changeAuth(data) {
       this.auth = data;
-    }
-  },
-  created() {
-    this.$session.start();
-    if( this.$session.get('auth') ){
-      this.auth = true;
-    } else{
-      this.auth = false;
-    }
+    }*/
   },
   mounted() {
     this.$eventHub.$on('logged', this.changeAuth);
