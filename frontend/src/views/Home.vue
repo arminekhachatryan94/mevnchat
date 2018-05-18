@@ -65,7 +65,7 @@ export default {
 
 <style>
 .padding-30 {
-    padding: 30px;
+  padding: 30px;
 }
 .padding-top-10 {
   padding-top: 10px;
@@ -74,17 +74,17 @@ export default {
   padding-top: 20px;
 }
 .padding-top-80 {
-    padding-top: 80px;
+  padding-top: 80px;
 }
 #home {
-    color: rgb(145, 204, 105);
-    font-family:'Courier New', Courier, monospace
+  color: rgb(145, 204, 105);
+  font-family:'Courier New', Courier, monospace
 }
 .title {
   color: rgb(145, 204, 105);
 }
 .margin-bottom-20 {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 .padding-left-200 {
   padding-left: 200px;

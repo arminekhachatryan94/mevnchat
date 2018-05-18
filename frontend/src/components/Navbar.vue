@@ -1,5 +1,5 @@
 <template>
-    <nav class="text-white row col-md-12 padding-top-10">
+    <nav class="text-white row col-md-12 padding-top-10 fixed">
         <span class="col-md-8 text-left">
             <router-link :to="{ name: 'Home' }" id="title-nav">iChat</router-link>
             <router-link v-if="this.auth0" :to="{ name: 'Messages' }">Messages</router-link>
@@ -18,8 +18,7 @@
 export default {
   name: 'Navbar',
   data () {
-    return {
-    }
+    return {}
   },
   created() {
   },
@@ -59,5 +58,8 @@ a {
 }
 .padding-top-10 {
     padding-top: 10px;
+}
+.fixed {
+  position: fixed;
 }
 </style>
